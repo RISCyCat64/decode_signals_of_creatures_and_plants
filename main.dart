@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'screens/home.dart';
 import 'screens/spectrogram.dart';
+import 'screens/classify.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +23,7 @@ class CreaturesDecoderApp extends StatelessWidget {
       home: const HomeScreen(),
       routes: {
         SpectrogramScreen.routeName: (_) => const SpectrogramScreen(),
+        ClassifyScreen.routeName: (_) => const ClassifyScreen(),
       },
     );
   }

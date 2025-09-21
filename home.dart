@@ -5,6 +5,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'spectrogram.dart';
+import 'classify.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -31,18 +32,16 @@ class _HomeScreenState extends State<HomeScreen> {
     await _player.openPlayer();
     await _recorder.openRecorder();
 
-    // Request permissions
     final micStatus = await Permission.microphone.request();
-    final storageStatus = await Permission.storage.request();
-
-    if (micStatus.isGranted && storageStatus.isGranted) {
+    // On Android 13+, READ/WRITE storage not needed if using app dir, but we check anyway.
+    if (micStatus.isGranted) {
       setState(() {
         _isRecorderReady = true;
       });
     } else {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Microphone/Storage permission required')),
+        const SnackBar(content: Text('Microphone permission required')),
       );
     }
   }
@@ -103,9 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Creatures Decoder'),
-      ),
+      appBar: AppBar(title: const Text('Creatures Decoder')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -116,10 +113,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    const Text(
-                      'Record & Playback',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
+                    const Text('Record & Playback',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 12),
                     Text(
                       _isRecording ? 'Recording…' : 'Ready',
@@ -146,28 +141,39 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 8),
                     if (_lastFilePath != null)
-                      Text(
-                        'Saved: ${_lastFilePath}',
-                        textAlign: TextAlign.center,
-                      ),
+                      Text('Saved: ${_lastFilePath}', textAlign: TextAlign.center),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(
-                  SpectrogramScreen.routeName,
-                  arguments: _lastFilePath,
-                );
-              },
-              child: const Text('Open Spectrogram'),
+            Wrap(
+              spacing: 12,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(
+                      SpectrogramScreen.routeName,
+                      arguments: _lastFilePath,
+                    );
+                  },
+                  child: const Text('Open Spectrogram'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(
+                      ClassifyScreen.routeName,
+                      arguments: _lastFilePath,
+                    );
+                  },
+                  child: const Text('Classify Signal (ML)'),
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             const Text(
               'Tip: For best results, record close to the sound source and avoid wind/traffic. '
-              'This MVP saves audio locally; spectrogram is a placeholder to be replaced with real FFT soon.',
+              'Spectrogram is computed offline from your saved recording.',
               textAlign: TextAlign.center,
             ),
           ],
