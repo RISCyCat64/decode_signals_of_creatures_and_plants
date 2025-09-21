@@ -2,3 +2,5 @@ Unknown
 Cat_Meow
 Dog_Bark
 Bird_Chirp
+Creature_Signals
+Plants_Signals
