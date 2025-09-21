@@ -1,54 +1,50 @@
 
-# Creatures Decoder
+# Creatures Decoder — v2
 **Repo:** `Decode-Signals-of-Creatures-and-Plants`  
 **App name:** *Creatures Decoder*
 
-Record, visualize, and (soon) decode acoustic signals from animals and plants.
+This is **Version 2**: adds a **real FFT spectrogram** (offline) and an **ML classifier scaffold** using TensorFlow Lite.
 
-## ✨ MVP Features (Phase 1)
-- Record audio (AAC) and save locally
-- Playback the last recording
-- Navigate to a **Spectrogram** screen (placeholder; FFT coming next)
+## ✅ What’s new in v2
+- **Spectrogram:** decodes your recording to mono 16 kHz WAV via FFmpeg, computes FFT frames in Dart, and renders a grayscale heatmap.
+- **ML scaffold:** screen to run inference via `tflite_flutter`. If no model is present, it **fails gracefully** with a placeholder result.
 
-## 🔮 Roadmap
-**Phase 2 – Spectrogram & Analysis**
-- Compute and render spectrograms (offline) using FFT
-- Markers & labels for call types
+## 🔧 Dependencies
+- `ffmpeg_kit_flutter_min_gpl` — for decoding AAC → WAV.
+- `tflite_flutter` — TensorFlow Lite interpreter (no model bundled by default).
+- `flutter_sound`, `permission_handler`, `path_provider` — from v1.
 
-**Phase 3 – AI Decoding**
-- TensorFlow Lite model for cat meows / dog barks / bird calls
-- Personalized training with your own labeled data
+## 📂 Structure
+```
+lib/
+ ├─ main.dart
+ ├─ screens/
+ │   ├─ home.dart            # Record/playback UI
+ │   ├─ spectrogram.dart     # Real FFT spectrogram
+ │   └─ classify.dart        # ML inference (graceful if model missing)
+assets/
+ └─ labels.txt               # Example labels (edit to match your model)
+```
+> Place your TFLite model at `assets/ml/model.tflite` and update `pubspec.yaml` if you add the assets folder. In this starter, we only include `labels.txt` so the app builds without a model.
 
-**Phase 4 – Plants & Community**
-- Ultrasonic stress-clicks in plants (requires >48 kHz mics)
-- Optional cloud dataset (Firebase) and model updates
+## 🏃 Run
+```bash
+flutter pub get
+flutter create .    # if android/ios folders missing
+flutter run
+```
+On iOS, add this to `ios/Runner/Info.plist`:
+```xml
+<key>NSMicrophoneUsageDescription</key>
+<string>This app records audio to analyze animal/plant signals.</string>
+```
 
-## 📱 Run Locally
-1. Install Flutter (stable channel).
-2. Clone this repo, then inside the project folder run:
-   ```bash
-   flutter pub get
-   # If platform folders are missing, generate them:
-   flutter create .
-   flutter run
-   ```
+## 🧠 Training & Models (next steps)
+- Start with a small model that accepts 1-second mono audio @16 kHz (shape `[1,16000]`) and outputs class probabilities.
+- Save as TFLite (`.tflite`) and include as `assets/ml/model.tflite`.
+- Ensure `assets/labels.txt` has matching class order.
 
-## ⚙️ Permissions
-- Microphone is required to record.
-- On Android, ensure `RECORD_AUDIO` is present (Flutter will inject via plugins).
-- On iOS, add these to `ios/Runner/Info.plist` after `flutter create .`:
-  ```xml
-  <key>NSMicrophoneUsageDescription</key>
-  <string>This app records audio to analyze animal/plant signals.</string>
-  ```
-
-## 🧩 Tech Stack
-- Flutter + Dart
-- Packages: `flutter_sound`, `permission_handler`, `path_provider`
-
-## 📝 Notes
-- Files are stored in the app documents directory with timestamped names.
-- Spectrogram is a placeholder; the next commit will add real FFT-based rendering.
-
-## 📄 License
-MIT
+## ⚠️ Notes
+- Spectrogram rendering is grayscale for simplicity. We can add better colormaps and axes later.
+- The classifier will show a placeholder if the model is missing, so the UI flow remains testable.
+- Plant ultrasonics need > 20 kHz capture; most phone mics won’t reach that. External ultrasonic mics are required.
