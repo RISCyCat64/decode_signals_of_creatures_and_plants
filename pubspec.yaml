@@ -1,0 +1,24 @@
+
+name: decode_signals_of_creatures_and_plants
+description: Flutter app 'Creatures Decoder' — record, playback, and visualize animal/plant signals.
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flutter_sound: ^9.2.13
+  permission_handler: ^11.3.1
+  path_provider: ^2.1.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
