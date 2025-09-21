@@ -1,0 +1,58 @@
+# Misc
+*.log
+*.swp
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# Flutter / Dart / Pub
+.dart_tool/
+.packages
+.pub/
+.pub-cache/
+build/
+flutter_*.png
+
+# Coverage
+coverage/
+coverage.lcov
+
+# Plugin tooling
+.flutter-plugins
+.flutter-plugins-dependencies
+.melos_tool/
+
+# Android
+android/.gradle/
+android/local.properties
+android/**/GeneratedPluginRegistrant.java
+android/app/release/
+
+# iOS
+ios/.generated/
+ios/Flutter/Flutter.framework
+ios/Flutter/App.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/ephemeral/
+ios/Pods/
+ios/.symlinks/
+ios/Runner/GeneratedPluginRegistrant.*
+**/DerivedData/
+**/*.xcworkspace/xcuserdata/
+**/*.xcodeproj/xcuserdata/
+
+# Web
+lib/generated_plugin_registrant.dart
+
+# Secrets (optional)
+.env
+.env.*
+**/google-services.json
+**/GoogleService-Info.plist
